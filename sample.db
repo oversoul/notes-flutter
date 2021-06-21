@@ -1,0 +1,14 @@
+{"version":1,"sembast":1}
+{"key":5,"value":{"id":5,"name":"Title of the first","body":"and this is the content","color":"#000000"}}
+{"key":6,"value":{"name":"First note is updated","body":"The content was modified..","color":"#8C3232","id":6}}
+{"key":7,"value":{"name":"this is second note","body":"lorem ipsum like always....\n\nAnime...","color":"#6A98FB","id":7}}
+{"key":8,"value":{"name":"First note","body":"lorem ipsum like always....","color":"#FF000F"}}
+{"key":9,"value":{"name":"First note","body":"lorem ipsum like always....","color":"#238492"}}
+{"key":10,"value":{"name":"First note","body":"lorem ipsum like always....","color":"#4C4C4C","id":10}}
+{"key":11,"value":{"name":"First note","body":"lorem ipsum like always....","color":"#FF0000"}}
+{"key":12,"value":{"name":"Last note","body":"lorem ipsum like always....\n\nafter updates..","color":"#FF0000","id":12}}
+{"key":18,"value":{"id":18,"name":"My New note","body":"this note was inserted from the content ","color":"#00EF2A"}}
+{"key":21,"value":{"id":21,"name":"aaand another updated more","body":"one here... what? this is ssoooo weird...","color":"#FFB400"}}
+{"key":22,"value":{"id":22,"name":"more more","body":"whatever?!\n\nless is more?","color":"#0002FF"}}
+{"key":21,"value":{"id":21,"name":"aaand another updated more","body":"one here... what? this is ssoooo weird...\n:)","color":"#FFB400"}}
+{"key":22,"value":{"id":22,"name":"more more","body":"whatever?!\n\nless is more?","color":"#0002FF"}}
