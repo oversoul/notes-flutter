@@ -45,51 +45,55 @@ class _MainPageState extends State<MainPage> {
           return GridView.builder(
             padding: EdgeInsets.all(20),
             itemBuilder: (context, index) {
-              return Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black.withOpacity(.07)),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      color: Colors.black.withOpacity(.03),
-                    )
-                  ],
-                ),
-                padding: EdgeInsets.all(20),
-                child: InkWell(
-                  onTap: () {
-                    final id = records[index].id;
-                    if (id == null) return;
-                    ScreenArguments args = ScreenArguments(id);
-                    AppState()
-                        .rootNavigator
-                        .currentState!
-                        .pushNamed('/note', arguments: args);
-                  },
-                  child: Column(
-                    children: [
-                      Row(
+              return ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black.withOpacity(.07)),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        color: Colors.black.withOpacity(.03),
+                      )
+                    ],
+                    color: Colors.white,
+                  ),
+                  child: MaterialButton(
+                    onPressed: () {
+                      final id = records[index].id;
+                      if (id == null) return;
+                      ScreenArguments args = ScreenArguments(id);
+                      AppState()
+                          .rootNavigator
+                          .currentState!
+                          .pushNamed('/note', arguments: args);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Column(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: HexColor.fromHex(
-                              records[index].color,
-                            ),
-                            radius: 10,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            records[index].name,
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: HexColor.fromHex(
+                                  records[index].color,
+                                ),
+                                radius: 10,
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                records[index].name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               );
