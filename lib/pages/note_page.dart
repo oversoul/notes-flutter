@@ -43,8 +43,6 @@ class _NotePageState extends State<NotePage> {
             return Container(color: Colors.red);
           }
 
-          print("data: ${snapshot.data.toMap()}");
-
           note = snapshot.data!;
 
           return NoteForm(

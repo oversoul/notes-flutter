@@ -1,12 +1,16 @@
+import 'dart:convert';
 import 'package:desk/app_state.dart';
 import 'package:desk/models/note.dart';
 import 'package:flutter/material.dart';
+import 'package:desk/content/text.dart';
+import 'package:desk/content/checkbox.dart';
 import 'package:desk/pages/main_page.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 
 class NoteForm extends StatefulWidget {
   final Note note;
   final void Function() onSave;
+
   NoteForm({required this.note, required this.onSave});
 
   @override
@@ -15,10 +19,14 @@ class NoteForm extends StatefulWidget {
 
 class _NoteFormState extends State<NoteForm> {
   late Note note;
+  late List models;
 
   @override
   void initState() {
     note = widget.note;
+    var body = json.decode(note.body);
+    models = jsonToContent(body);
+
     super.initState();
   }
 
@@ -36,10 +44,10 @@ class _NoteFormState extends State<NoteForm> {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             AppState()
-                .rootNavigator
-                .currentState!
-                .pushNamedAndRemoveUntil('/', (_) => false)
-                .then((value) => setState(() {}));
+              .rootNavigator
+              .currentState!
+              .pushNamedAndRemoveUntil('/', (_) => false)
+              .then((value) => setState(() {}));
           },
         ),
         title: Text(
@@ -60,7 +68,15 @@ class _NoteFormState extends State<NoteForm> {
           IconButton(
             icon: Icon(Icons.save),
             color: textColor,
-            onPressed: widget.onSave,
+            onPressed: () {
+              var body = [];
+              for (var widget in models) {
+                body.add(widget.model.toJson());
+              }
+
+              note.body = json.encode(body);
+              widget.onSave();
+            },
           ),
         ],
         backgroundColor: color,
@@ -68,27 +84,21 @@ class _NoteFormState extends State<NoteForm> {
       body: Container(
         width: double.infinity,
         padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             TextFormField(
+              key: ValueKey(note.name),
               initialValue: note.name,
               style: TextStyle(fontSize: 32),
               onChanged: (v) => setState(() => note.name = v),
             ),
-            SizedBox(height: 20),
-            Expanded(
-              child: TextFormField(
-                maxLines: null,
-                expands: true,
-                initialValue: note.body,
-                onChanged: (v) {
-                  setState(() => note.body = v);
-                },
-              ),
-            )
+            ...models,
+            // TextWidget(
+            //   model: textWidgetModel
+            // ),
+            // CheckboxWidget(
+            //   model: checkWidgetModel,
+            // ),
           ],
         ),
       ),
@@ -110,9 +120,7 @@ class _NoteFormState extends State<NoteForm> {
             wheelDiameter: 240,
             heading: Text('Select color'),
             onColorChanged: (Color color) {
-              setState(() {
-                note.color = "#${color.hex}";
-              });
+              setState(() => note.color = "#${color.hex}");
             },
             pickersEnabled: <ColorPickerType, bool>{
               ColorPickerType.wheel: true,
@@ -130,4 +138,28 @@ class _NoteFormState extends State<NoteForm> {
       ],
     );
   }
+}
+
+
+
+
+List jsonToContent(List content) {
+  List models = [];
+  for(var item in content) {
+    switch (item['name']) {
+      case 'TextWidget':
+        models.add(TextWidget(
+          model: TextWidgetModel.fromMap(item)
+        ));
+        break;
+      case 'CheckboxWidget':
+        models.add(CheckboxWidget(
+          model: CheckboxWidgetModel.fromMap(item)
+        ));
+        break;
+      default:
+    }
+  }
+  
+  return models;
 }
