@@ -11,7 +11,7 @@ class AddNotePage extends StatefulWidget {
 
 class _AddNotePageState extends State<AddNotePage> {
   late NoteBloc noteBloc;
-  Note note = Note(name: '', body: '', color: '#ffffff');
+  Note note = Note(name: '', body: '[]', color: '#ffffff');
 
   @override
   void initState() {

@@ -20,10 +20,12 @@ class NoteForm extends StatefulWidget {
 class _NoteFormState extends State<NoteForm> {
   late Note note;
   late List models;
+  final nameController = TextEditingController();
 
   @override
   void initState() {
     note = widget.note;
+    nameController.text = note.name;
     var body = json.decode(note.body);
     models = jsonToContent(body);
 
@@ -51,7 +53,7 @@ class _NoteFormState extends State<NoteForm> {
           },
         ),
         title: Text(
-          note.name,
+          nameController.text,
           style: TextStyle(color: textColor),
         ),
         actions: [
@@ -74,6 +76,7 @@ class _NoteFormState extends State<NoteForm> {
                 body.add(widget.model.toJson());
               }
 
+              note.name = nameController.text;
               note.body = json.encode(body);
               widget.onSave();
             },
@@ -87,18 +90,11 @@ class _NoteFormState extends State<NoteForm> {
         child: ListView(
           children: [
             TextFormField(
-              key: ValueKey(note.name),
-              initialValue: note.name,
+              controller: nameController,
+              onChanged: (v) { setState(() {}); },
               style: TextStyle(fontSize: 32),
-              onChanged: (v) => setState(() => note.name = v),
             ),
             ...models,
-            // TextWidget(
-            //   model: textWidgetModel
-            // ),
-            // CheckboxWidget(
-            //   model: checkWidgetModel,
-            // ),
           ],
         ),
       ),
@@ -139,8 +135,6 @@ class _NoteFormState extends State<NoteForm> {
     );
   }
 }
-
-
 
 
 List jsonToContent(List content) {
