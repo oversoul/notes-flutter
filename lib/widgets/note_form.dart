@@ -84,19 +84,16 @@ class _NoteFormState extends State<NoteForm> {
         ],
         backgroundColor: color,
       ),
-      body: Container(
-        width: double.infinity,
+      body: ListView(
         padding: EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            TextFormField(
-              controller: nameController,
-              onChanged: (v) { setState(() {}); },
-              style: TextStyle(fontSize: 32),
-            ),
-            ...models,
-          ],
-        ),
+        children: [
+          TextFormField(
+            controller: nameController,
+            onChanged: (v) { setState(() {}); },
+            style: TextStyle(fontSize: 32),
+          ),
+          ...models,
+        ],
       ),
     );
   }

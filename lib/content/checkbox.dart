@@ -25,11 +25,12 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
 						onPressed: () {
 							widget.model.lines.add(CheckLine.fromMap({
 								'checked': false,
-								'content': 'dummy content'
+								'content': ''
 							}));
 
-							widget.model.save();
-							setState(() {});
+							setState(() {
+								widget.model.save();
+							});
 						}
 					),
 				],

@@ -12,16 +12,11 @@ class TextWidget extends StatefulWidget {
 
 class _TextWidgetState extends State<TextWidget> {
 
-
-	@override
+		@override
 	Widget build(BuildContext context) {
 		return Container(
 			child: TextFormField(
-				onChanged: (v) {
-					widget.model.content = v;
-					widget.model.save();
-				},
-				initialValue: widget.model.content,
+				controller: widget.model.content,
 			),
 		);
 	}
@@ -30,7 +25,7 @@ class _TextWidgetState extends State<TextWidget> {
 
 class TextWidgetModel with ChangeNotifier {
 	int position;
-	String content;
+	TextEditingController content;
 
 	TextWidgetModel({
 		required this.content,
@@ -40,15 +35,15 @@ class TextWidgetModel with ChangeNotifier {
 	Map<String, dynamic> toJson() {
 		return {
 			'name': 'TextWidget',
-			'content': this.content,
 			'position': this.position,
+			'content': this.content.text,
 		};
 	}
 
 	static TextWidgetModel fromMap(Map<String, dynamic> map) {
 		return TextWidgetModel(
 			position: map['position'] as int,
-			content: map['content'] as String,
+			content: TextEditingController(text: map['content'] as String),
 		);
 	}
 
