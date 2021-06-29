@@ -1,4 +1,3 @@
-import 'package:desk/app_state.dart';
 import 'package:desk/models/note.dart';
 import 'package:flutter/material.dart';
 import 'package:desk/blocs/note_bloc.dart';
