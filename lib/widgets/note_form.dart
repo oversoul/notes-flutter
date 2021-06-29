@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:desk/app_state.dart';
 import 'package:desk/models/note.dart';
 import 'package:flutter/material.dart';
-import 'package:desk/content/text.dart';
-import 'package:desk/content/checkbox.dart';
 import 'package:desk/pages/main_page.dart';
+import 'package:desk/content/widgetable_content.dart';
+import 'package:desk/widgets/popup_menu/popup_menu.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 
 class NoteForm extends StatefulWidget {
@@ -19,15 +18,16 @@ class NoteForm extends StatefulWidget {
 
 class _NoteFormState extends State<NoteForm> {
   late Note note;
-  late List models;
+  final content = WidgetableContent();
+  GlobalKey addButtonKey = GlobalKey();
   final nameController = TextEditingController();
 
   @override
   void initState() {
     note = widget.note;
     nameController.text = note.name;
-    var body = json.decode(note.body);
-    models = jsonToContent(body);
+
+    content.encode(note.body);
 
     super.initState();
   }
@@ -46,10 +46,10 @@ class _NoteFormState extends State<NoteForm> {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             AppState()
-              .rootNavigator
-              .currentState!
-              .pushNamedAndRemoveUntil('/', (_) => false)
-              .then((value) => setState(() {}));
+                .rootNavigator
+                .currentState!
+                .pushNamedAndRemoveUntil('/', (_) => false)
+                .then((value) => setState(() {}));
           },
         ),
         title: Text(
@@ -71,13 +71,8 @@ class _NoteFormState extends State<NoteForm> {
             icon: Icon(Icons.save),
             color: textColor,
             onPressed: () {
-              var body = [];
-              for (var widget in models) {
-                body.add(widget.model.toJson());
-              }
-
               note.name = nameController.text;
-              note.body = json.encode(body);
+              note.body = content.decode();
               widget.onSave();
             },
           ),
@@ -89,13 +84,47 @@ class _NoteFormState extends State<NoteForm> {
         children: [
           TextFormField(
             controller: nameController,
-            onChanged: (v) { setState(() {}); },
+            onChanged: (v) {
+              setState(() {});
+            },
             style: TextStyle(fontSize: 32),
           ),
-          ...models,
+          ...content.models,
+          MaterialButton(
+            height: 45.0,
+            key: addButtonKey,
+            child: Text('Show Menu'),
+            onPressed: addWidgetMenu,
+          ),
         ],
       ),
     );
+  }
+
+  void addWidgetMenu() {
+    PopupMenu menu = PopupMenu(
+      maxColumn: 2,
+      context: context,
+      items: [
+        MenuItem(
+          title: 'Text',
+          userInfo: 'TextWidget',
+          image: Icon(Icons.text_fields, color: Colors.white),
+        ),
+        MenuItem(
+          title: 'Check Box List',
+          userInfo: 'CheckboxWidget',
+          image: Icon(Icons.check_box, color: Colors.white),
+        ),
+      ],
+      onClickMenu: (MenuItemProvider item) {
+        content.addBlankWidgetFromString(item.userInfo);
+        setState(() {});
+      },
+      // stateChanged: stateChanged,
+      // onDismiss: onDismiss,
+    );
+    menu.show(widgetKey: addButtonKey);
   }
 
   Widget colorPickerDialog(BuildContext context, Color color) {
@@ -131,26 +160,4 @@ class _NoteFormState extends State<NoteForm> {
       ],
     );
   }
-}
-
-
-List jsonToContent(List content) {
-  List models = [];
-  for(var item in content) {
-    switch (item['name']) {
-      case 'TextWidget':
-        models.add(TextWidget(
-          model: TextWidgetModel.fromMap(item)
-        ));
-        break;
-      case 'CheckboxWidget':
-        models.add(CheckboxWidget(
-          model: CheckboxWidgetModel.fromMap(item)
-        ));
-        break;
-      default:
-    }
-  }
-  
-  return models;
 }
